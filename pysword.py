@@ -32,7 +32,6 @@
 #  python pysword.py esv 1pet 2 9
 
 import os
-modules_path = os.environ["HOME"]+"/.sword/modules/texts/ztext"
 from books import ref_to_index, testaments, find_book, Book
 
 import struct, zlib
@@ -103,7 +102,8 @@ class ZModule(object):
 
 if __name__=='__main__':
     import sys
-    mod_name, book, chapter, verse = sys.argv[1:]
+    modules_path = "/Applications/MacSword/Modules/"
+    modules_path, mod_name, book, chapter, verse = sys.argv[1:]
    
     module = ZModule(mod_name)
     print module.text_for_ref(book, chapter, verse)
