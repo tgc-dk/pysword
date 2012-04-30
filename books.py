@@ -36,9 +36,6 @@ class Book(object):
         # FIXME: it seems that it should be 'verse - 1', but that isn't right.
         # Maybe I missed something about the offset calculation.
         return self.offset + self.chapter_offsets[chapter-1] + verse
-    
-    def get_abbrev(self):
-        return self.preferred_abbreviation
 
 
 # This data came from canon.h in the SWORD repository. Code to transform it to
