@@ -29,13 +29,16 @@
 #  NT is analogous.
 #
 # Example usage:
-#  python pysword.py esv 1pet 2 9
+#  python pysword.py /path/to/modules/ esv 1pet 2 9
+#  python pysword.py /path/to/modules/ esv 1pet 2     (displays entire chapter)
 
 import os
 from books import ref_to_index, testaments, find_book, Book
 
 import struct, zlib
 from os.path import join as path_join
+
+modules_path = "/Users/joshuagross/Library/Application Support/Sword/modules/texts/ztext/"
 
 class ZModule(object):
     def __init__(self, module):
@@ -44,10 +47,10 @@ class ZModule(object):
             'ot': None,
             'nt': None 
             }
-        try:
-          self.files['ot'] = self.get_files('ot')
-        except:
-          pass
+        #try:
+        self.files['ot'] = self.get_files('ot')
+        #except:
+          #pass
         try:
           self.files['nt'] = self.get_files('nt')
         except:
@@ -121,16 +124,18 @@ class ZModule(object):
 
 if __name__=='__main__':
     import sys
-    modules_path = "/Applications/MacSword/Modules/"
-    try:
+    if len(sys.argv[1:]) == 5: # display verse
       modules_path, mod_name, book, chapter, verse = sys.argv[1:]
       module = ZModule(mod_name)
       print module.text_for_ref(book, chapter, verse)
-    except:
+    elif len(sys.argv[1:]) == 4: # display chapter
       modules_path, mod_name, book, chapter = sys.argv[1:]
       chapter = int(chapter)
       module = ZModule(mod_name)
-      allverses = module.all_verses_in_chapter(book, chapter)
-      for i in allverses:
-        book, chapter, verse, text = i
+      for book, chapter, verse, text in module.all_verses_in_chapter(book, chapter):
         print text
+    else:
+      print 'Wrong number of arguments.'
+      print 'Example usage:'
+      print '  python pysword.py /path/to/modules/ esv 1pet 2 9'
+      print '  python pysword.py /path/to/modules/ esv 1pet 2     (displays entire chapter)'
