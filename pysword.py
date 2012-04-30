@@ -47,11 +47,11 @@ class ZModule(object):
         try:
           self.files['ot'] = self.get_files('ot')
         except:
-          i = 0 #noop
+          pass
         try:
           self.files['nt'] = self.get_files('nt')
         except:
-          i = 0 #noop
+          pass
    
     def get_files(self, testament):
         '''Given a testament ('ot' or 'nt'), returns a tuple of files
