@@ -41,9 +41,17 @@ class ZModule(object):
     def __init__(self, module):
         self.module = module
         self.files = {
-            'ot': self.get_files('ot'),
-            'nt': self.get_files('nt')
+            'ot': None,
+            'nt': None 
             }
+        try:
+          self.files['ot'] = self.get_files('ot')
+        except:
+          i = 0 #noop
+        try:
+          self.files['nt'] = self.get_files('nt')
+        except:
+          i = 0 #noop
    
     def get_files(self, testament):
         '''Given a testament ('ot' or 'nt'), returns a tuple of files
@@ -98,14 +106,31 @@ class ZModule(object):
                 yield (book, chapter, verse,
                        self.text_for_index(book.testament,
                                            book.get_index_for_ref(chapter, verse)))
+    def all_verses_in_chapter(self, book, in_chapter):
+        if not isinstance(book, Book): book = find_book(book)
+        for chapter, verses in enumerate(book.chapter_lengths):
+            chapter = chapter + 1
+            if chapter == in_chapter:
+              for verse in range(verses):
+                  verse = verse+1
+                  yield (book, chapter, verse,
+                         self.text_for_index(book.testament,
+                                             book.get_index_for_ref(chapter, verse)))
+        
         
 
 if __name__=='__main__':
     import sys
     modules_path = "/Applications/MacSword/Modules/"
-    modules_path, mod_name, book, chapter, verse = sys.argv[1:]
-   
-    module = ZModule(mod_name)
-    print module.text_for_ref(book, chapter, verse)
-    
-    
+    try:
+      modules_path, mod_name, book, chapter, verse = sys.argv[1:]
+      module = ZModule(mod_name)
+      print module.text_for_ref(book, chapter, verse)
+    except:
+      modules_path, mod_name, book, chapter = sys.argv[1:]
+      chapter = int(chapter)
+      module = ZModule(mod_name)
+      allverses = module.all_verses_in_chapter(book, chapter)
+      for i in allverses:
+        book, chapter, verse, text = i
+        print text
