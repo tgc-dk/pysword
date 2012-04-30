@@ -47,13 +47,13 @@ class ZModule(object):
             'ot': None,
             'nt': None 
             }
-        #try:
-        self.files['ot'] = self.get_files('ot')
-        #except:
-          #pass
+        try:
+          self.files['ot'] = self.get_files('ot')
+        except IOError:
+          pass
         try:
           self.files['nt'] = self.get_files('nt')
-        except:
+        except IOError:
           pass
    
     def get_files(self, testament):
