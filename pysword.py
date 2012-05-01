@@ -47,14 +47,12 @@ class ZModule(object):
             'ot': None,
             'nt': None 
             }
-        try:
-          self.files['ot'] = self.get_files('ot')
-        except IOError:
-          pass
-        try:
-          self.files['nt'] = self.get_files('nt')
-        except IOError:
-          pass
+        try: self.files['ot'] = self.get_files('ot')
+        except IOError: pass
+        try: self.files['nt'] = self.get_files('nt')
+        except IOError: pass
+        if self.files['ot'] is None and self.files['nt'] is None:
+          raise Error('Could not open OT or NT for module')
    
     def get_files(self, testament):
         '''Given a testament ('ot' or 'nt'), returns a tuple of files
