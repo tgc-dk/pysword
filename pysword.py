@@ -33,12 +33,11 @@
 #  python pysword.py /path/to/modules/ esv 1pet 2     (displays entire chapter)
 
 import os
+modules_path = os.environ["HOME"]+"/.sword/modules/texts/ztext"
 from books import ref_to_index, testaments, find_book, Book
 
 import struct, zlib
 from os.path import join as path_join
-
-modules_path = "/Users/joshuagross/Library/Application Support/Sword/modules/texts/ztext/"
 
 class ZModule(object):
     def __init__(self, module):
