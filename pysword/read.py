@@ -43,7 +43,7 @@ class Passage(object):
     def __getitem__(self, key):
         if self.end:
             raise ValueError('Cannot get item of a Passage with an end')
-        if self.start[-1]:
+        if self.start[-1] is None:
             raise ValueError('Only one verse')
         
         seed = tuple()
@@ -51,8 +51,9 @@ class Passage(object):
             seed = tuple(x for x in self.start if x is not None)
         
         if isinstance(slice, key):
-            # Slicing is different from Python slicing. It is _inclusive_
-            # of the stop value.
+            # Slicing is different from typical Bible ranges.
+            # It follows the Python pattern of _not_ including the
+            # final index.
             start, stop = key.start, key.stop
             if not isinstance(tuple, start):
                 start = (start,)
@@ -64,13 +65,14 @@ class Passage(object):
             if len(stop) > 4 - len(seed):
                 raise ValueError('slice stop tuple too long')
 
+            stop = stop[:-1] + (stop[-1] - 1)
             return type(self)(seed + start, seed + stop)
         else:
             if not isinstance(tuple, key):
                 key = (key,)
             if len(key) > 4 - len(seed):
                 raise ValueError('reference tuple too long')
-            return type(self)(seed + start)
+            return type(self)(seed + key)
             
 def book_finder(reference):
     """Take a reference tuple, and return a book function"""
@@ -81,7 +83,6 @@ def book(name_string):
     pass
 
 #example useage:
-
 #from canon import Bible, book
 #Bible[book('gen')][1][2]
 #Bible[(book('gen')+(1,1):(book('rev')+(2,2)]
