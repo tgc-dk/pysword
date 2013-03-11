@@ -1,6 +1,34 @@
 class Passage(object):
     __slots__ = ('version', 'start', 'end')
     
+    # _reference is a class member that subclasses override.
+    # It is a sequence of sequences of the form
+    #
+    # (
+    #   (testament,
+    #     (
+    #       (Bookname, book_abbr,
+    #         (ch1_len, ch2_len, ch3_len, ...)
+    #       ),
+    #       ...
+    #     )
+    #   ),
+    #   ...
+    # )
+    #
+    # For example, a bogus bible with only one testament and book,
+    # and the given chapter lengths.
+    # (
+    #   ('ot',
+    #     (
+    #       ('Hezekiah', 'hez',
+    #         (30,29,30,29,30)
+    #       ),
+    #     )
+    #   ),
+    # )
+    _reference = None
+    
     def __init__(self, version, start=None, stop=None):
         """
         Represets a Bible passage, which is a range of verses. Passages 
