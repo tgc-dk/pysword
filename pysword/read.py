@@ -102,13 +102,29 @@ class Passage(object):
                 raise ValueError('reference tuple too long')
             return type(self)(seed + key)
             
-def book_finder(reference):
-    """Take a reference tuple, and return a book function"""
-    pass
-
-def book(name_string):
-    """Give a (testament, book) reference tuple for a name string of a book"""
-    pass
+def book_finder(passage_cls):
+    """Take a passage class with a reference tuple, and return a book function"""
+    refs = passage_cls._reference
+    def book_exact(name):
+        """Returns one exact match, on either name or abbreviation"""
+        lname = name.lower()
+        for testament, test_index in enumerate(refs):
+            for book, book_index in enumerate(testament[1]):
+                if lname == book[0].lower() or lname == book[1].lower():
+                    return test_index, book_index
+                    
+    def book_like(name):
+        """Returns one startswith match, on either name or abbreviation"""
+        lname = name.lower()
+        for testament, test_index in enumerate(refs):
+            for book, book_index in enumerate(testament[1]):
+                if book[0].lower().startswith(lname) or book[1].lower().startswith(lname):
+                    return test_index, book_index
+                    
+    def book(name):
+        return book_exact or book_like
+    
+    return book
 
 #example useage:
 #from canon import Bible, book
