@@ -122,7 +122,7 @@ def book_finder(passage_cls):
                     return test_index, book_index
                     
     def book(name):
-        return book_exact or book_like
+        return book_exact(name) or book_like(name)
     
     return book
 
