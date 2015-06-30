@@ -35,7 +35,7 @@
 import os, struct, zlib
 from os.path import join as path_join
 
-from books import BibleStructure
+from .books import BibleStructure
 modules_path = os.environ["HOME"]+"/.sword/modules/texts/ztext"
 
 class SwordBible(object):
@@ -91,9 +91,9 @@ class SwordBible(object):
         '''Retrieve the text for a given reference'''
         indicies = self.__structure.ref_to_indicies(books=books, chapters=chapters, verses=verses)
 
-        for testament,idxs in indicies.iteritems():
+        for testament,idxs in indicies.items():
             for idx in idxs:
-                yield self.__text_for_index(testament, idx)
+                yield self.__text_for_index(testament, idx).decode()
 
     def get(self, books=None, chapters=None, verses=None, join='\n'):
         output = []

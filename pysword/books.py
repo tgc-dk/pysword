@@ -7,7 +7,7 @@ class BookStructure(object):
         self.num_chapters = len(chapter_lengths)
 
     def __repr__(self):
-        return u'Book(%s)' % self.name
+        return 'Book(%s)' % self.name
     
     def name_matches(self, name):
         name = name.lower()
@@ -19,7 +19,7 @@ class BookStructure(object):
 
     def get_indicies(self, chapters=None, verses=None, offset=0):
         if chapters is None:
-            chapters = range(1,self.num_chapters+1)
+            chapters = list(range(1,self.num_chapters+1))
         elif isinstance(chapters,int):
             chapters = [chapters]
         if len(chapters) != 1:
@@ -30,7 +30,7 @@ class BookStructure(object):
         refs = []
         for chapter in chapters:
             if verses is None:
-                tmp_verses = range(1,self.chapter_lengths[chapter-1]+1)
+                tmp_verses = list(range(1,self.chapter_lengths[chapter-1]+1))
             else:
                 tmp_verses = verses
             refs.extend( [offset + self.chapter_offset(chapter-1) + verse-1 for verse in tmp_verses])
@@ -126,7 +126,7 @@ class BibleStructure(object):
         # Compute index offsets and add other data
         # FIXME: this is still a little hairy.
         self.__book_offsets = {}
-        for testament, books in self.__books.iteritems():
+        for testament, books in self.__books.items():
             idx = 2 # start after the testament heading
             for book in books:
                 self.__book_offsets[book.name] = idx
@@ -140,7 +140,7 @@ class BibleStructure(object):
 
     def find_book(self, name):
         name = name.lower()
-        for testament, books in self.__books.iteritems():
+        for testament, books in self.__books.items():
             for num, book in enumerate(books):
                 if book.name_matches(name):
                     return testament, book
@@ -152,7 +152,7 @@ class BibleStructure(object):
             # Return all books
             books = []
             for section in self.__books:
-                books.extend(map(lambda b: b.name, self.__books[section]))
+                books.extend([b.name for b in self.__books[section]])
         elif isinstance(books,str):
             books = [books]
 
