@@ -12,8 +12,8 @@ class SwordModuleType:
 
 class SwordBible(object):
 
-    def __init__(self, module, module_type=SwordModuleType.ZTEXT):
-        self.__structure = BibleStructure()
+    def __init__(self, module, module_type=SwordModuleType.ZTEXT, versification='default'):
+        self.__structure = BibleStructure(versification)
         self.__module = module
         self.__module_type = module_type
         self.__modules_path = os.path.join(os.environ['HOME'], '.sword', 'modules', 'texts', self.__module_type)
@@ -75,7 +75,7 @@ class SwordBible(object):
         verse_to_buf.seek(self.__verse_record_size*index)
         buf_num, verse_start, verse_len = struct.unpack(self.__verse_record_format, verse_to_buf.read(self.__verse_record_size))
         uncompressed_text = self.__uncompressed_text(testament, buf_num)
-        return uncompressed_text[verse_start:verse_start+verse_len].decode()
+        return uncompressed_text[verse_start:verse_start+verse_len].decode(errors='replace')
 
     def __uncompressed_text(self, testament, buf_num):
         verse_to_buf, buf_to_loc, text = self.__files[testament]
@@ -97,12 +97,13 @@ class SwordBible(object):
         verse_to_loc.seek(self.__verse_record_size*index)
         verse_start, verse_len = struct.unpack(self.__verse_record_format, verse_to_loc.read(self.__verse_record_size))
         text.seek(verse_start)
-        return text.read(verse_len).decode()
+        return text.read(verse_len).decode(errors='replace')
 
     ###### USER FACING #################################################################################
     def getiter(self, books=None, chapters=None, verses=None):
         '''Retrieve the text for a given reference'''
         indicies = self.__structure.ref_to_indicies(books=books, chapters=chapters, verses=verses)
+        print(indicies.items())
 
         for testament,idxs in indicies.items():
             for idx in idxs:

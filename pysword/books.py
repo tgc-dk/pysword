@@ -1,3 +1,5 @@
+from .canons import *
+
 class BookStructure(object):
     def __init__(self, name, osis_name, preferred_abbreviation, chapter_lengths):
         self.name = name
@@ -43,12 +45,51 @@ class BookStructure(object):
 
 class BibleStructure(object):
 
-    def __init__(self):
+    def __init__(self, versification):
         self.__section_order = ['ot','nt']
         self.__book_offsets = None # offsets within sections
 
+        self.__books = {
+            'ot': [],
+            'nt': [],
+        }
+        # Find the canon used
+        canon = default
+        if versification == 'catholic2':
+            canon = catholic2
+        elif versification == 'german':
+            canon = german
+        elif versification == 'kjva':
+            canon = kjva
+        elif versification == 'leningrad':
+            canon = leningrad
+        elif versification == 'luther':
+            canon = luther
+        elif versification == 'lxx':
+            canon = lxx
+        elif versification == 'mt':
+            canon = mt
+        elif versification == 'nrsva':
+            canon = nrsva
+        elif versification == 'nrsv':
+            canon = nrsv
+        elif versification == 'orthodox':
+            canon = orthodox
+        elif versification == 'synodal':
+            canon = synodal
+        elif versification == 'synodalprot':
+            canon = synodalprot
+        elif versification == 'vulg':
+            canon = vulg
+        # Create the BookStructures needed
+        for book in canon['ot']:
+            self.__books['ot'].append(BookStructure(*book))
+        for book in canon['nt']:
+            self.__books['nt'].append(BookStructure(*book))
+
         # This data came from canon.h in the SWORD repository. Code to transform it to
         # this form can be found in the repository history.
+        """
         self.__books = {
             'ot': [
                 BookStructure('Genesis', 'Gen', 'Gen', [31, 25, 24, 26, 32, 22, 24, 22, 29, 32, 32, 20, 18, 24, 21, 16, 27, 33, 38, 18, 34, 24, 20, 67, 34, 35, 46, 22, 35, 43, 55, 32, 20, 31, 29, 43, 36, 30, 23, 23, 57, 38, 34, 34, 28, 34, 31, 22, 33, 26]),
@@ -121,6 +162,7 @@ class BibleStructure(object):
                 BookStructure('Revelation of John', 'Rev', 'Rev', [20, 29, 22, 11, 14, 17, 17, 13, 21, 11, 19, 17, 18, 20, 8, 21, 18, 24, 21, 15, 27, 21]),
             ],
         }
+        """
 
     def __update_book_offsets(self):
         # Compute index offsets and add other data

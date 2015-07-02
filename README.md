@@ -1,9 +1,7 @@
 A native Python3 reader of the SWORD Project Bible Modules
 
 ## TODO
-* Detect available modules.
 * Clean text of OSIS and GBF tags.
-* Add support for alternative canons (apocrypha).
 * Support reading from zipped modules.
 
 ## Module formats
