@@ -1,8 +1,30 @@
 A native Python3 reader of the SWORD Project Bible Modules
 
+## Features
+* Read SWORD bibles (not commentaries etc.)
+* Detection of available modules (bibles).
+* Supports all known SWORD module formats (ztext, ztext4, rawtext, rawtext4)
+
 ## TODO
 * Clean text of OSIS and GBF tags.
 * Support reading from zipped modules.
+
+## License
+Since parts of the code is derived and/or copied (see canons.py) from the SWORD project
+which is GPL2, this code is also under the GPL2 license.
+
+## Example code
+```python
+from pysword.modules import SwordModules
+# Find available modules/bibles
+modules = SwordModules()
+# In this case we'll assume the modules found is:
+# {'KJV': 'King James Version (1769) with Strongs Numbers and Morphology'}
+found_modules = modules.parse_modules();
+bible = modules.get_bible_from_module('KJV')
+# Get John chapter 3 verse 16
+output = bible.get(books=['john'], chapters=[3], verses=[16])
+```
 
 ## Module formats
 I'll use Python's struct module's format strings to describe byte formatting.
