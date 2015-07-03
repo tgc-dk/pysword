@@ -2,7 +2,7 @@ import os
 import configparser
 
 from .books import BibleStructure
-from .pysword import SwordBible
+from .bible import SwordBible
 
 
 class SwordModules(object):
