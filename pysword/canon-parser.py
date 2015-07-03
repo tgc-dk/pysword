@@ -54,7 +54,7 @@ def parse_canon_header(filename):
     name = os.path.splitext(os.path.basename(filename))[0][6:]
     idx = 0
     print(name + ' = {')
-    for testament, contents in (('ot', ot),('nt', nt)):
+    for testament, contents in (('ot', ot), ('nt', nt)):
         print('%r: [' % testament)
         for num, (name, osis, pref_abbr, num_chapters) in enumerate(contents):
             new_idx = idx + num_chapters
