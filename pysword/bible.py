@@ -21,6 +21,7 @@
 import os
 import struct
 import zlib
+import chardet
 
 from .books import BibleStructure
 
@@ -78,6 +79,20 @@ class SwordBible(object):
         elif self.__module_type == SwordModuleType.RAWTEXT4:
             self.__verse_record_format = '<II'
             self.__verse_record_size = 8
+        # Detect text-encoding
+        if self.__module_type in (SwordModuleType.ZTEXT, SwordModuleType.ZTEXT4):
+            if self.__files['ot']:
+                testament = 'ot'
+            else:
+                testament = 'nt'
+            ret = self.__uncompressed_text(testament, 0)
+            self.__encoding = chardet.detect(ret)['encoding']
+        else:
+            if self.__files['ot']:
+                testament = 'ot'
+            else:
+                testament = 'nt'
+            self.__encoding = chardet.detect(self.__files[testament][1].read(1024))['encoding']
 
     def __get_ztext_files(self, testament):
         '''Given a testament ('ot' or 'nt'), returns a tuple of files
@@ -105,7 +120,7 @@ class SwordBible(object):
         buf_num, verse_start, verse_len = struct.unpack(self.__verse_record_format,
                                                         verse_to_buf.read(self.__verse_record_size))
         uncompressed_text = self.__uncompressed_text(testament, buf_num)
-        return uncompressed_text[verse_start:verse_start+verse_len].decode(errors='replace')
+        return uncompressed_text[verse_start:verse_start+verse_len].decode(self.__encoding, errors='replace')
 
     def __uncompressed_text(self, testament, buf_num):
         verse_to_buf, buf_to_loc, text = self.__files[testament]
@@ -127,7 +142,7 @@ class SwordBible(object):
         verse_to_loc.seek(self.__verse_record_size*index)
         verse_start, verse_len = struct.unpack(self.__verse_record_format, verse_to_loc.read(self.__verse_record_size))
         text.seek(verse_start)
-        return text.read(verse_len).decode(errors='replace')
+        return text.read(verse_len).decode(self.__encoding, errors='replace')
 
     ###### USER FACING #################################################################################
     def getiter(self, books=None, chapters=None, verses=None):

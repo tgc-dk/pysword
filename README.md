@@ -4,10 +4,10 @@ A native Python3 reader of the SWORD Project Bible Modules
 * Read SWORD bibles (not commentaries etc.)
 * Detection of available modules (bibles).
 * Supports all known SWORD module formats (ztext, ztext4, rawtext, rawtext4)
+* Read from zipped modules from http://www.crosswire.org/sword/modules/ModDisp.jsp?modType=Bibles
 
 ## TODO
 * Clean text of OSIS and GBF tags.
-* Support reading from zipped modules.
 
 ## License
 Since parts of the code is derived and/or copied (see canons.py) from the SWORD project
